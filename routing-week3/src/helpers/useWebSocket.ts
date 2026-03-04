@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useStore } from '../stores/useStore';
 import type { Stock } from '../types/types';
+// import { parseMessage } from '../services/websocket/messageParser';
 
 const SERVER_URL = 'ws://127.0.0.1:8080'; // Using IP is more reliable than 'localhost'
 
@@ -61,6 +62,7 @@ export const useWebSocket = () => {
         };
 
         ws.onmessage = (event: MessageEvent) => {
+            // const msg = parseMessage(event.data);
             try {
                 const msg = JSON.parse(event.data);
 

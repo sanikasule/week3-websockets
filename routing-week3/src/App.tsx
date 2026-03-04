@@ -54,7 +54,7 @@ export default function App() {
       height: "100vh", backgroundColor: "#010409", color: "#E6EDF3",
     }}>
  
-      <Header isConnected={isConnected} />
+      <Header isConnected={isConnected} latencyMs={0}/>
  
       <div style={{
         padding: "10px 20px", borderBottom: "1px solid #21262D",

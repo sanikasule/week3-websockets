@@ -1,8 +1,18 @@
+import { useMarketStore } from "../stores/market.store";
+
 type HeaderProps = {
     isConnected: boolean;
+    latencyMs: number | null; // NEW
 };
 
 export function Header({isConnected}: HeaderProps) {
+    const latencyMs = useMarketStore(s => s.latencyMs);
+
+    // green < 50ms · gold < 150ms · red >= 150ms
+    const latColor = latencyMs===null ? "#484F58"
+        : latencyMs<50 ? "#00C87C"
+        : latencyMs<150 ? "#FFB800" : "#FF4D4D";
+
     return (
         <div style={{
             display: "flex",
@@ -32,6 +42,10 @@ export function Header({isConnected}: HeaderProps) {
                 }}>
                     dev feed
                 </span>
+                {latencyMs !== null && (
+                    <span style={{ fontFamily:"monospace", fontSize:11, color:latColor}}>         {latencyMs}ms
+                    </span>
+                )}
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import type { Stock } from "../types/types";
 import { SparkLine } from "./SparkLine";
 import { formatPrice, formatPercent, formatChange,
@@ -89,3 +89,5 @@ export function StockRow({ stock, history, isSelected, onClick }: StockRowProps)
     </tr>
   );
 }
+
+export default memo(StockRow)
