@@ -6,5 +6,5 @@ export default defineConfig({
   resolve: {
     alias: { "@": "/src" },
   },
-  base: 'week3-websockets'
+  base: '/week3-websockets/'
 });
