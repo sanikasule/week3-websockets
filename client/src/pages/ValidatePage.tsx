@@ -27,6 +27,7 @@ export const ValidateOTP = () => {
             
             // 2. EXTRACTION: Save the final Bearer Token
             setToken(token);
+            sessionStorage.setItem("auth-token", token);
             
             // For debugging (remove in production)
             console.log("Extracted Token:", token);

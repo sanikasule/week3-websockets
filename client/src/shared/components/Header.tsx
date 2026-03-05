@@ -1,19 +1,30 @@
-import { memo } from "react";
+import { memo, useState, useEffect } from "react";
 import { useMarketStore } from "@/store";
 import { useUIStore } from "@/store";
+import { dashboardConfig } from "@/services/dashboard/dashboard-config";
 
 export const Header = memo(function Header() {
   const isConnected = useMarketStore((s) => s.isConnected);
   const tickCount   = useMarketStore((s) => s.tickCount);
   const activeTab   = useUIStore((s) => s.activeTab);
   const setActiveTab = useUIStore((s) => s.setActiveTab);
+  const token = useUIStore((s) => s.token);
+  const [headerTab, setHeaderTab] = useState<{name: string}[]>([]); //incoming data is in an  object form and is an array of multiple objects
 
-  const tabs: Array<{ id: typeof activeTab; label: string }> = [
-    { id: "dashboard",  label: "Market" },
-    { id: "portfolio",  label: "Portfolio" },
-    { id: "orderbook",  label: "Order Book" },
-    { id: "watchlist",  label: "Watchlist" },
-  ];
+  useEffect(() => {
+    const featuresConfig = async () => {
+      try {
+        const token = sessionStorage.getItem("auth-token");
+        if (token) {
+          const data = await dashboardConfig(token);
+          setHeaderTab(data.dashboard.features)
+        }
+      } catch (err) {
+        console.error("Failed to fetch data", err);
+      }
+    }
+    featuresConfig();
+  }, [token]) //this configures once user gets token.
 
   return (
     <header style={{
@@ -42,18 +53,18 @@ export const Header = memo(function Header() {
 
       {/* Nav tabs */}
       <nav style={{ display: "flex", gap: "4px", flex: 1 }}>
-        {tabs.map((t) => (
-          <button key={t.id} onClick={() => setActiveTab(t.id)} style={{
-            background: activeTab === t.id ? "var(--bg-elevated)" : "none",
-            border: activeTab === t.id ? "1px solid var(--border)" : "1px solid transparent",
-            color: activeTab === t.id ? "var(--text-primary)" : "var(--text-muted)",
+        {headerTab.map((t) => (
+          <button key={t.name} onClick={() => setActiveTab(t.name)} style={{
+            background: activeTab === t.name ? "var(--bg-elevated)" : "none",
+            border: activeTab === t.name ? "1px solid var(--border)" : "1px solid transparent",
+            color: activeTab === t.name ? "var(--text-primary)" : "var(--text-muted)",
             borderRadius: "var(--radius)",
             padding: "5px 14px",
             fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: "500",
             cursor: "pointer", letterSpacing: "0.5px",
             transition: "all 0.15s ease",
           }}>
-            {t.label}
+            {t.name}
           </button>
         ))}
       </nav>

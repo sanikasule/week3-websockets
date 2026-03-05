@@ -11,5 +11,5 @@ export async function validateOTP(username: string, otp: number) {
     const data = await response.json();
     
     // FINAL EXTRACTION
-    return data.bearerToken; 
+    return data.jwtTokens.accessToken; 
 }

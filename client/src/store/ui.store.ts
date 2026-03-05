@@ -10,7 +10,7 @@ type UIState = {
   notifications: Notification[];
   token: string | null;
   handshake: string;
-  activeTab: "loading" | "login" | "validate_otp" | "dashboard" | "portfolio" | "orderbook" | "watchlist";
+  activeTab: "loading" | "login" | "validate_otp" | "dashboard" | "portfolio" | "orderbook" | "watchlist" | string; //added string so that can be any active tab
 
   addToWatchlist: (symbol: string) => void;
   removeFromWatchlist: (symbol: string) => void;
