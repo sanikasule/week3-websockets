@@ -6,6 +6,9 @@ import { PortfolioPage } from "@/features/portfolio-overview/PortfolioPage";
 import { OrderBookPage } from "@/features/order-book/OrderBookPage";
 import { WatchlistPage } from "@/features/dashboard/WatchlistPage";
 import { useUIStore } from "@/store/ui.store";
+import { LoadingScreen } from "./pages/LoadingScreen";
+import { LoginPage } from "./pages/LoginPage";
+import { ValidateOTP } from "./pages/ValidatePage";
 
 export default function App() {
   // Starts WebSocket connection — runs once on mount
@@ -15,6 +18,9 @@ export default function App() {
 
   const renderTab = () => {
     switch (activeTab) {
+      case "loading": return <LoadingScreen />;
+      case "login": return <LoginPage />;
+      case "validate_otp": return <ValidateOTP />;
       case "dashboard":  return <DashboardPage />;
       case "portfolio":  return <PortfolioPage />;
       case "orderbook":  return <OrderBookPage />;

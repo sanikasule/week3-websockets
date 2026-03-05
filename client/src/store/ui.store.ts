@@ -8,17 +8,25 @@ type UIState = {
   watchlist: WatchlistItem[];
   sidebarOpen: boolean;
   notifications: Notification[];
-  activeTab: "dashboard" | "portfolio" | "orderbook" | "watchlist";
+  token: string | null;
+  handshake: string;
+  activeTab: "loading" | "login" | "validate_otp" | "dashboard" | "portfolio" | "orderbook" | "watchlist";
 
   addToWatchlist: (symbol: string) => void;
   removeFromWatchlist: (symbol: string) => void;
   setSidebarOpen: (v: boolean) => void;
   setActiveTab: (tab: UIState["activeTab"]) => void;
   pushNotification: (msg: string, kind?: Notification["kind"]) => void;
+  setHandshake: (ts: string) => void;
+  setToken: (token: string) => void;
   dismissNotification: (id: number) => void;
 };
 
 export const useUIStore = create<UIState>((set) => ({
+  token: null,
+  activeTab: "loading",
+  handshake: "",
+
   watchlist: [
     { symbol: "TCS" },
     { symbol: "RELIANCE" },
@@ -28,7 +36,12 @@ export const useUIStore = create<UIState>((set) => ({
   ],
   sidebarOpen: true,
   notifications: [],
-  activeTab: "dashboard",
+
+  setHandshake: (ts) => set({handshake: ts}),
+
+  setToken: (token) => set({token}),
+
+  setActiveTab: (tab) => set({ activeTab: tab }),
 
   addToWatchlist: (symbol) =>
     set((state) => ({
@@ -41,8 +54,6 @@ export const useUIStore = create<UIState>((set) => ({
     set((state) => ({ watchlist: state.watchlist.filter((w) => w.symbol !== symbol) })),
 
   setSidebarOpen: (v) => set({ sidebarOpen: v }),
-
-  setActiveTab: (tab) => set({ activeTab: tab }),
 
   pushNotification: (msg, kind = "info") =>
     set((state) => ({

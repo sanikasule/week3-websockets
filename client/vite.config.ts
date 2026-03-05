@@ -6,5 +6,19 @@ export default defineConfig({
   resolve: {
     alias: { "@": "/src" },
   },
-  base: '/week3-websockets/'
+  base: '/week3-websockets/',
+  server: {
+    proxy: {
+      '/v1': {
+        target: 'https://preprodapisix.omnenest.com',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/v2': {
+        target: 'https://preprodapisix.omnenest.com',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
+  }
 });
