@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useUIStore } from "@/store/ui.store";
 import { useMarketStore } from "@/store";
 import { formatPrice, formatPercent, getColor } from "@/shared/utils";
@@ -15,7 +15,8 @@ export function WatchlistPage() {
   // const removeFromWatchlist = useUIStore((s) => s.removeFromWatchlist);
   // const stocks            = useMarketStore((s) => s.stocks);
   // const priceHistory      = useMarketStore((s) => s.priceHistory);
-  // const setSelected       = useMarketStore((s) => s.setSelected);
+  const setWatchlistId      = useMarketStore((s) => s.setWatchlistId);
+  const activeTab = useUIStore((s) => s.activeTab);
   const setActiveTab      = useUIStore((s) => s.setActiveTab);
   const token = useUIStore((s) => s.token);
   const [watchlistData, setWatchlistData] = useState<{userDefined: WatchlistItem[];
@@ -54,9 +55,24 @@ export function WatchlistPage() {
         marginBottom: "20px",
       }}>
         <div>
-          <h2 style={{ fontFamily: "var(--font-display)", fontSize: "18px", fontWeight: "700", color: "var(--text-primary)" }}>
+        <div style={{display: "flex", justifyContent: "space-between", width: "100%", alignItems: "center"}}>
+          <h2 style={{ fontFamily: "var(--font-display)", fontSize: "18px", fontWeight: "700", color: "var(--text-primary)",  margin: 0 }}>
             Your Watchlists
           </h2>
+
+          <button onClick={() => setActiveTab("dashboard")} style={{
+            background: activeTab === 'dashboard' ? "var(--bg-elevated)" : "none",
+            border: activeTab === 'dashboard' ? "1px solid var(--border)" : "1px solid transparent",
+            color: activeTab === 'dashboard' ? "var(--text-primary)" : "var(--text-muted)",
+            borderRadius: "var(--radius)",
+            padding: "5px 14px",
+            fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: "500",
+            cursor: "pointer", letterSpacing: "0.5px",
+            transition: "all 0.15s ease",
+          }}>
+            Back
+          </button>
+        </div>
           <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "4px" }}>
             {allWatchlists.length} groups available
           </div>
@@ -79,6 +95,12 @@ export function WatchlistPage() {
           gap: "14px",
         }}>
           {allWatchlists.map((wl) => {
+            const handleView = (e: React.MouseEvent, id: number) => {
+              e.stopPropagation();
+              setWatchlistId(id);
+              setActiveTab("watchlist-detail")
+            }
+
             const isDefault = wl.watchlistId === watchlistData.defaultId;
             
             return (
@@ -119,7 +141,7 @@ export function WatchlistPage() {
                   )}
                 </div>
 
-                <div style={{ marginTop: "16px", display: "flex", justifyContent: "flex-end" }}>
+                <div onClick={(e) => handleView(e, wl.watchlistId) } style={{ marginTop: "16px", display: "flex", justifyContent: "flex-end" }}>
                    <div style={{ fontSize: "12px", color: "var(--text-muted)" }}>
                      View Assets →
                    </div>

@@ -66,7 +66,7 @@ export const LoginPage = () => {
             <button 
                 onClick={handleLogin} 
                 disabled={isLoading} 
-                style={{ cursor: isLoading ? "not-allowed" : "pointer", padding: "10px" }}
+                style={{ cursor: isLoading ? "not-allowed" : "pointer", padding: "10px", fontFamily: "var(--font-mono)" }}
             >
                 {isLoading ? "Authenticating..." : "Login"}
             </button>

@@ -2,9 +2,11 @@ import { memo, useState, useEffect } from "react";
 import { useMarketStore } from "@/store";
 import { useUIStore } from "@/store";
 import { dashboardConfig } from "@/services/dashboard/dashboard-config";
+import { getMarketStatus } from "@/services/dashboard/market-status";
 
 export const Header = memo(function Header() {
   const isConnected = useMarketStore((s) => s.isConnected);
+  const setConnected = useMarketStore((s) => s.setConnected);
   const tickCount   = useMarketStore((s) => s.tickCount);
   const activeTab   = useUIStore((s) => s.activeTab);
   const setActiveTab = useUIStore((s) => s.setActiveTab);
@@ -17,6 +19,8 @@ export const Header = memo(function Header() {
         const token = sessionStorage.getItem("auth-token");
         if (token) {
           const data = await dashboardConfig(token);
+          // const status = await getMarketStatus(token);
+          // setConnected(status.market_status[market_status.length()-1].marketStatus.substring(15) === "Open" ? true : false)
           setHeaderTab(data.dashboard.features)
         }
       } catch (err) {

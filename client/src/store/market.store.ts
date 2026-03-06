@@ -11,13 +11,15 @@ type MarketState = {
   isConnected: boolean;
   tickCount: number;
   eventLog: EventLogEntry[];
-  selectedSymbol: string | null;
+  selectedSymbol: string | null; // For the specific stock (e.g., "RELIANCE")
+  selectedWatchlistId: number | 0; // For the watchlist group (e.g., 101)
 
   // Actions
   setStock: (stock: Stock) => void;
   setOrderBook: (ob: OrderBook) => void;
   setConnected: (v: boolean) => void;
   setSelected: (symbol: string | null) => void;
+  setWatchlistId: (id: number | 0) => void; // New action
   addEvent: (msg: string, kind: EventKind) => void;
   resetTickCount: () => void;
 };
@@ -30,6 +32,7 @@ export const useMarketStore = create<MarketState>((set) => ({
   tickCount: 0,
   eventLog: [],
   selectedSymbol: null,
+  selectedWatchlistId: 0,
 
   setStock: (stock) =>
     set((state) => {
@@ -47,6 +50,8 @@ export const useMarketStore = create<MarketState>((set) => ({
   setConnected: (v) => set({ isConnected: v }),
 
   setSelected: (symbol) => set({ selectedSymbol: symbol }),
+
+  setWatchlistId: (id) => set({ selectedWatchlistId: id }),
 
   addEvent: (msg, kind) =>
     set((state) => {

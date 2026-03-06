@@ -9,6 +9,7 @@ import { useUIStore } from "@/store/ui.store";
 import { LoadingScreen } from "./pages/LoadingScreen";
 import { LoginPage } from "./pages/LoginPage";
 import { ValidateOTP } from "./pages/ValidatePage";
+import { WatchlistScripsPage } from "./pages/WatchlistScripsPage";
 
 export default function App() {
   // Starts WebSocket connection — runs once on mount
@@ -25,6 +26,7 @@ export default function App() {
       case "portfolio":  return <PortfolioPage />;
       case "orderbook":  return <OrderBookPage />;
       case "Watchlist":  return <WatchlistPage />;
+      case "watchlist-detail": return <WatchlistScripsPage />;
       default:           return <DashboardPage />;
     }
   };
