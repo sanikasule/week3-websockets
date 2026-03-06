@@ -55,7 +55,7 @@ export default function App() {
         flexShrink: 0,
       }}>
         <span>ws://localhost:8080</span>
-        <span>Groww-915 · Simulated data — for learning only</span>
+        <span>OmneNEST · Simulated data — for learning only</span>
       </footer>
 
       <NotificationStack />
