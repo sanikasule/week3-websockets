@@ -24,7 +24,7 @@ export default function App() {
       case "dashboard":  return <DashboardPage />;
       case "portfolio":  return <PortfolioPage />;
       case "orderbook":  return <OrderBookPage />;
-      case "watchlist":  return <WatchlistPage />;
+      case "Watchlist":  return <WatchlistPage />;
       default:           return <DashboardPage />;
     }
   };

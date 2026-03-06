@@ -1,21 +1,51 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useUIStore } from "@/store/ui.store";
 import { useMarketStore } from "@/store";
 import { formatPrice, formatPercent, getColor } from "@/shared/utils";
 import { Sparkline } from "@/widgets/ChartContainer/Sparkline";
+import { watchlistList } from "@/services/watchlist/watchlist-list";
+
+interface WatchlistItem {
+  watchlistName: string;
+  watchlistId: number;
+}
 
 export function WatchlistPage() {
-  const watchlist         = useUIStore((s) => s.watchlist);
-  const removeFromWatchlist = useUIStore((s) => s.removeFromWatchlist);
-  const stocks            = useMarketStore((s) => s.stocks);
-  const priceHistory      = useMarketStore((s) => s.priceHistory);
-  const setSelected       = useMarketStore((s) => s.setSelected);
+  // const watchlist         = useUIStore((s) => s.watchlist);
+  // const removeFromWatchlist = useUIStore((s) => s.removeFromWatchlist);
+  // const stocks            = useMarketStore((s) => s.stocks);
+  // const priceHistory      = useMarketStore((s) => s.priceHistory);
+  // const setSelected       = useMarketStore((s) => s.setSelected);
   const setActiveTab      = useUIStore((s) => s.setActiveTab);
+  const token = useUIStore((s) => s.token);
+  const [watchlistData, setWatchlistData] = useState<{userDefined: WatchlistItem[];
+    predefined: WatchlistItem[];
+    defaultId: number | null;}>({
+    userDefined: [],
+    predefined: [],
+    defaultId: null,
+  });
 
-  const items = useMemo(() =>
-    watchlist.map((w) => ({ ...w, stock: stocks[w.symbol] }))
-    .filter((w) => w.stock),
-  [watchlist, stocks]);
+  useEffect(() => {
+      const watchlistConfig = async () => {
+        try {
+          const token = sessionStorage.getItem("auth-token");
+          if (token) {
+            const data = await watchlistList(token);
+            setWatchlistData({
+            userDefined: data.userDefinedWatchlists || [],
+            predefined: data.predefinedWatchlists || [],
+            defaultId: data.defaultWatchlistId,
+          })
+          }
+        } catch (err) {
+          console.error("Failed to fetch data", err);
+        }
+      }
+      watchlistConfig();
+    }, [token]) //this configures once user gets token.
+
+    const allWatchlists = [...watchlistData.predefined, ...watchlistData.userDefined];
 
   return (
     <div style={{ flex: 1, overflowY: "auto", padding: "24px" }}>
@@ -25,23 +55,22 @@ export function WatchlistPage() {
       }}>
         <div>
           <h2 style={{ fontFamily: "var(--font-display)", fontSize: "18px", fontWeight: "700", color: "var(--text-primary)" }}>
-            Watchlist
+            Your Watchlists
           </h2>
           <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "4px" }}>
-            {items.length} stocks being tracked
+            {allWatchlists.length} groups available
           </div>
         </div>
       </div>
 
-      {items.length === 0 ? (
+      {allWatchlists.length === 0 ? (
         <div style={{
           display: "flex", flexDirection: "column", alignItems: "center",
           justifyContent: "center", gap: "12px", padding: "80px 0",
           color: "var(--text-muted)", fontFamily: "var(--font-mono)",
         }}>
-          <div style={{ fontSize: "32px" }}>◉</div>
-          <div style={{ fontSize: "13px" }}>Your watchlist is empty</div>
-          <div style={{ fontSize: "11px" }}>Click any stock in the Market tab and add it here</div>
+          <div style={{ fontSize: "32px" }}>📂</div>
+          <div style={{ fontSize: "13px" }}>No watchlists found</div>
         </div>
       ) : (
         <div style={{
@@ -49,48 +78,51 @@ export function WatchlistPage() {
           gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
           gap: "14px",
         }}>
-          {items.map(({ symbol, stock }) => {
-            if (!stock) return null;
-            const isPos = stock.changePercent >= 0;
+          {allWatchlists.map((wl) => {
+            const isDefault = wl.watchlistId === watchlistData.defaultId;
+            
             return (
-              <div key={symbol} style={{
+              <div key={wl.watchlistId} style={{
                 background: "var(--bg-panel)", border: "1px solid var(--border)",
-                borderRadius: "var(--radius)", padding: "16px",
+                borderRadius: "var(--radius)", padding: "20px",
                 cursor: "pointer", transition: "border-color 0.15s, transform 0.15s",
+                position: "relative"
               }}
-                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = isPos ? "var(--green)" : "var(--red)"; }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "var(--text-primary)"; }}
                 onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = "var(--border)"; }}
                 onClick={() => {
-                  setSelected(symbol);
-                  setActiveTab("dashboard");
+                   // Logic to select this watchlist and perhaps navigate
+                   console.log("Selected watchlist:", wl.watchlistId);
                 }}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "12px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
-                    <div style={{ fontWeight: "700", fontSize: "14px", color: "var(--text-primary)" }}>{symbol}</div>
-                    <div style={{ fontSize: "10px", color: "var(--text-muted)", marginTop: "2px" }}>{stock.name}</div>
+                    <div style={{ fontWeight: "700", fontSize: "16px", color: "var(--text-primary)" }}>
+                      {wl.watchlistName}
+                    </div>
+                    <div style={{ fontSize: "10px", color: "var(--text-muted)", marginTop: "4px", fontFamily: "var(--font-mono)" }}>
+                      ID: #{wl.watchlistId}
+                    </div>
                   </div>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); removeFromWatchlist(symbol); }}
-                    style={{
-                      background: "none", border: "none", color: "var(--text-muted)",
-                      cursor: "pointer", fontSize: "16px", lineHeight: 1, padding: "2px 4px",
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "var(--red)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
-                  >×</button>
+                  
+                  {isDefault && (
+                    <span style={{ 
+                      fontSize: "9px", 
+                      background: "var(--bg-highlight)", 
+                      color: "var(--text-primary)", 
+                      padding: "2px 6px", 
+                      borderRadius: "4px",
+                      border: "1px solid var(--border)"
+                    }}>
+                      DEFAULT
+                    </span>
+                  )}
                 </div>
 
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
-                  <div>
-                    <div style={{ fontSize: "18px", fontWeight: "700", color: "var(--text-primary)", fontFamily: "var(--font-mono)" }}>
-                      {formatPrice(stock.price)}
-                    </div>
-                    <span className={`badge ${isPos ? "badge-green" : "badge-red"}`} style={{ marginTop: "4px" }}>
-                      {formatPercent(stock.changePercent)}
-                    </span>
-                  </div>
-                  <Sparkline prices={priceHistory[symbol] ?? []} isGreen={isPos} width={80} height={36} />
+                <div style={{ marginTop: "16px", display: "flex", justifyContent: "flex-end" }}>
+                   <div style={{ fontSize: "12px", color: "var(--text-muted)" }}>
+                     View Assets →
+                   </div>
                 </div>
               </div>
             );
