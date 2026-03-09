@@ -20,7 +20,7 @@ export const Header = memo(function Header() {
         if (token) {
           const data = await dashboardConfig(token);
           // const status = await getMarketStatus(token);
-          // setConnected(status.market_status[market_status.length()-1].marketStatus.substring(15) === "Open" ? true : false)
+          // setConnected(status.market_status[status.market_status.length - 1].marketStatus.includes("Open"));
           setHeaderTab(data.dashboard.features)
         }
       } catch (err) {

@@ -17,9 +17,9 @@ export function WatchlistScripsPage() {
                 if (token) {
                     const response = await watchlistListScripList(token, watchlistId);
                     const mappedStocks = response.scrips.map((scrip: any) => {
-                        const price = scrip.openPrice || scrip.openPrice;
+                        const price = scrip.openPrice || scrip.previousClosePrice || 0;
                         const change = scrip.netChange || 0;
-                        const changePercent = scrip.previousClosePrice  ? (change/scrip.previousClosePrice)*100 : 0;
+                        const changePercent = scrip.previousClosePrice  ? (change/scrip.previousClosePrice) : 0;
 
                         return {
                             symbol: scrip.symbolName,
@@ -28,7 +28,7 @@ export function WatchlistScripsPage() {
                             price: price,
                             change: change,
                             changePercent: changePercent,
-                            volume: scrip.volumeTradedToday,
+                            volume: scrip.volumeTradedToday || 0,
 
                         }
                     })

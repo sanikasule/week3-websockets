@@ -10,6 +10,9 @@ import { LoadingScreen } from "./pages/LoadingScreen";
 import { LoginPage } from "./pages/LoginPage";
 import { ValidateOTP } from "./pages/ValidatePage";
 import { WatchlistScripsPage } from "./pages/WatchlistScripsPage";
+import { FundsSummaryPage } from "./pages/FundsSummaryPage";
+import { MarketNewsPage } from "./pages/NewsPage";
+import { IndicesOrderingPage } from "./pages/IndicesOrdering";
 
 export default function App() {
   // Starts WebSocket connection — runs once on mount
@@ -27,6 +30,9 @@ export default function App() {
       case "orderbook":  return <OrderBookPage />;
       case "Watchlist":  return <WatchlistPage />;
       case "watchlist-detail": return <WatchlistScripsPage />;
+      case "Fund summary": return <FundsSummaryPage />;
+      case "Market news": return <MarketNewsPage />;
+      case "Indices": return <IndicesOrderingPage />;
       default:           return <DashboardPage />;
     }
   };
