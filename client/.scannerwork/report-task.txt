@@ -1,0 +1,6 @@
+projectKey=websockets
+serverUrl=https://animated-space-goggles-66x4755ww4wc55g5-9000.app.github.dev
+serverVersion=10.7.0.96327
+dashboardUrl=https://animated-space-goggles-66x4755ww4wc55g5-9000.app.github.dev/dashboard?id=websockets
+ceTaskId=5d14e980-0983-49a6-bd01-25ebfa4d5530
+ceTaskUrl=https://animated-space-goggles-66x4755ww4wc55g5-9000.app.github.dev/api/ce/task?id=5d14e980-0983-49a6-bd01-25ebfa4d5530
