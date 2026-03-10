@@ -1,8 +1,8 @@
 import { memo } from "react";
-import type { Stock } from "@/shared/types";
-import { Sparkline } from "@/widgets/ChartContainer/Sparkline";
-import { formatPrice, formatPercent, formatChange, formatVolume, formatMarketCap, getColor, getBgColor } from "@/shared/utils";
-import { useUIStore } from "@/store";
+import type { Stock } from "../../shared/types";
+import { Sparkline } from "../../widgets/ChartContainer/Sparkline";
+import { formatPrice, formatPercent, formatChange, formatVolume, formatMarketCap, getColor } from "../../shared/utils";
+import { useUIStore } from "../../store/ui.store";
 
 type Props = {
   stock: Stock | null;

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useUIStore } from "@/store";
-import { getLogin } from "@/services/api/login";
+import { useUIStore } from "../store";
+import { getLogin } from "../services/api/login";
 
 export const LoginPage = () => {
     // 1. Local state for form inputs and loading status

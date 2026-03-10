@@ -1,9 +1,9 @@
 import { useState, useMemo, useCallback, memo } from "react";
-import { useMarketStore } from "@/store";
-import { StockTable } from "@/features/dashboard/StockTable";
-import { StockDetail } from "@/features/stock-details/StockDetail";
-import { EventFeed } from "@/widgets/LiveTicker/EventFeed";
-import type { Stock } from "@/shared/types";
+import { useMarketStore } from "../store";
+import { StockTable } from "../features/dashboard/StockTable";
+import { StockDetail } from "../features/stock-details/StockDetail";
+import { EventFeed } from "../widgets/LiveTicker/EventFeed";
+import type { Stock } from "../shared/types";
 
 export const DashboardPage = memo(function DashboardPage() {
   const stocks        = useMarketStore((s) => s.stocks);

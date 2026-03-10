@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
-import { useUIStore } from "@/store/ui.store";
-import { rmsLimit } from "@/services/funds-summary/rms-limit";
+import { useUIStore } from "../store/ui.store";
+import { rmsLimit } from "../services/funds-summary/rms-limit";
 
 interface MarginItem{
     displayLabel: string;
@@ -58,7 +58,7 @@ const FundCard: React.FC<FundCardProps> = ({ label, value, isUsed }) => {
 };
 
 export function FundsSummaryPage() {
-  const activeTab = useUIStore((s) => s.activeTab);
+  // const activeTab = useUIStore((s) => s.activeTab);
   const setActiveTab = useUIStore((s) => s.setActiveTab);
   const token = useUIStore((s) => s.token);
 

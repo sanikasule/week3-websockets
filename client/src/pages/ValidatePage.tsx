@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useUIStore } from "@/store";
-import { validateOTP } from "@/services/api/validate";
+import { useUIStore } from "../store";
+import { validateOTP } from "../services/api/validate";
 
 export const ValidateOTP = () => {
     const [otp, setOtp] = useState("");

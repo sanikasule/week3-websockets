@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useUIStore } from "@/store";
+import { useUIStore } from "../../store";
 
 export function NotificationStack() {
   const notifications     = useUIStore((s) => s.notifications);

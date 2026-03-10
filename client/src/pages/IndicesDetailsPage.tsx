@@ -1,5 +1,5 @@
-import { indicesList } from "@/services/indices/indices-list";
-import { useMarketStore, useUIStore } from "@/store";
+import { indicesList } from "../services/indices/indices-list";
+import { useMarketStore, useUIStore } from "../store";
 import { useEffect, useState } from "react";
 
 interface IndicesDetailsItem {

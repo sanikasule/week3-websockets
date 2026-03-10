@@ -1,11 +1,11 @@
-import { watchlistListScripList } from "@/services/watchlist/watchlist-scrips-list";
-import { useMarketStore, useUIStore } from "@/store";
+import { watchlistListScripList } from "../services/watchlist/watchlist-scrips-list";
+import { useMarketStore, useUIStore } from "../store";
 import { useEffect, useState } from "react";
-import { StockTable } from "@/features/dashboard/StockTable";
+import { StockTable } from "../features/dashboard/StockTable";
 
 export function WatchlistScripsPage() {
     const token = useUIStore((s) => s.token);
-    const stocks = useMarketStore((s) => s.stocks);
+    // const stocks = useMarketStore((s) => s.stocks);
     const priceHistory = useMarketStore((s) => s.priceHistory);
     const watchlistId = useMarketStore((s) => s.selectedWatchlistId)
     const [scrips, setScrips] = useState<any[]>([]);

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { WatchlistItem } from "@/shared/types";
+import type { WatchlistItem } from "../shared/types";
 
 type Notification = { id: number; msg: string; kind: "success" | "error" | "info" };
 let notifId = 0;
@@ -10,7 +10,7 @@ type UIState = {
   notifications: Notification[];
   token: string | null;
   handshake: string;
-  activeTab: "loading" | "login" | "validate_otp" | "dashboard" | "portfolio" | "orderbook" | "Watchlist" | "watchlist-detail" | "Fund summary" | "Market news" | "Indices" | string; //added string so that can be any active tab
+  activeTab: "loading" | "login" | "validate_otp" | "dashboard" | "portfolio" | "orderbook" | "Watchlist" | "watchlist-detail" | "Fund summary" | "Market news" | "Indices" | "indices-detail" | string; //added string so that can be any active tab
 
   addToWatchlist: (symbol: string) => void;
   removeFromWatchlist: (symbol: string) => void;

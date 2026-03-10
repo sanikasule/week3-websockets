@@ -1,9 +1,7 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { useUIStore } from "@/store/ui.store";
-import { useMarketStore } from "@/store";
-import { formatPrice, formatPercent, getColor } from "@/shared/utils";
-import { Sparkline } from "@/widgets/ChartContainer/Sparkline";
-import { watchlistList } from "@/services/watchlist/watchlist-list";
+import React, { useState, useEffect } from "react";
+import { useUIStore } from "../../store/ui.store";
+import { useMarketStore } from "../../store/market.store";
+import { watchlistList } from "../../services/watchlist/watchlist-list";
 
 interface WatchlistItem {
   watchlistName: string;
@@ -16,7 +14,6 @@ export function WatchlistPage() {
   // const stocks            = useMarketStore((s) => s.stocks);
   // const priceHistory      = useMarketStore((s) => s.priceHistory);
   const setWatchlistId      = useMarketStore((s) => s.setWatchlistId);
-  const activeTab = useUIStore((s) => s.activeTab);
   const setActiveTab      = useUIStore((s) => s.setActiveTab);
   const token = useUIStore((s) => s.token);
   const [watchlistData, setWatchlistData] = useState<{userDefined: WatchlistItem[];

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Holding } from "@/shared/types";
+import type { Holding } from "../shared/types";
 
 type PortfolioState = {
   holdings: Holding[];

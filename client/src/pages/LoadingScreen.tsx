@@ -1,5 +1,5 @@
-import { useUIStore } from "@/store"
-import { getTimestamp } from "@/shared/utils/utils";
+import { useUIStore } from "../store"
+import { getTimestamp } from "../shared/utils/utils";
 
 export const LoadingScreen = () => {
     const {setHandshake, setActiveTab} = useUIStore();

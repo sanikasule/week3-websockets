@@ -1,6 +1,6 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { useUIStore } from "@/store/ui.store";
-import { newsFeed } from "@/services/news/news-feed";
+import React, { useState, useEffect } from "react";
+import { useUIStore } from "../store/ui.store";
+import { newsFeed } from "../services/news/news-feed";
 
 interface NewsItem {
   title: string;
@@ -79,7 +79,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ title, contentSnippet, link, publis
 };
 
 export function MarketNewsPage() {
-  const activeTab = useUIStore((s) => s.activeTab);
+  // const activeTab = useUIStore((s) => s.activeTab);
   const setActiveTab = useUIStore((s) => s.setActiveTab);
   const token = useUIStore((s) => s.token);
 

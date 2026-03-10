@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { Stock, OrderBook, EventLogEntry, EventKind } from "@/shared/types";
+import type { Stock, OrderBook, EventLogEntry, EventKind } from "../shared/types";
 
 let eventIdCounter = 0;
 

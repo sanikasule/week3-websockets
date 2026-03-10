@@ -1,7 +1,7 @@
 import { memo } from "react";
-import type { Stock } from "@/shared/types";
+import type { Stock } from "../../shared/types";
 import { StockRow } from "./StockRow";
-import { useMarketStore } from "@/store";
+import { useMarketStore } from "../../store/market.store";
 
 type Props = {
   stocks: Stock[];

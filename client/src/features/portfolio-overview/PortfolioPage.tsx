@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { usePortfolioStore } from "@/store/portfolio.store";
-import { useMarketStore } from "@/store";
-import { formatPrice, formatPercent, formatChange, getColor } from "@/shared/utils";
-import { Sparkline } from "@/widgets/ChartContainer/Sparkline";
+import { usePortfolioStore } from "../../store/portfolio.store";
+import { useMarketStore } from "../../store/market.store";
+import { formatPrice, formatPercent, formatChange, getColor } from "../../shared/utils";
+import { Sparkline } from "../../widgets/ChartContainer/Sparkline";
 
 export function PortfolioPage() {
   const holdings      = usePortfolioStore((s) => s.holdings);
@@ -28,7 +28,7 @@ export function PortfolioPage() {
 
   const totalPnl = totals.current - totals.invested;
   const totalPct = totals.invested > 0 ? ((totalPnl / totals.invested) * 100) : 0;
-  const isPos    = totalPnl >= 0;
+  // const isPos    = totalPnl >= 0;
 
   return (
     <div style={{ flex: 1, overflowY: "auto", padding: "24px" }}>

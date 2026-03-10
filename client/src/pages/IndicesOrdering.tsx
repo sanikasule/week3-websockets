@@ -1,7 +1,8 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { useUIStore } from "@/store/ui.store";
-import { useMarketStore } from "@/store";
-import { indicesOrdering } from "@/services/indices/indices-ordering";
+import { useState, useEffect } from "react";
+import { useUIStore } from "../store/ui.store";
+// import { useMarketStore } from "../store/market.store";
+import { indicesOrdering } from "../services/indices/indices-ordering";
+// import { IndicesDetailsPage } from "./IndicesDetailsPage";
 
 interface IndicesItem {
   indexName: string;
@@ -14,9 +15,9 @@ interface IndicesItem {
 
 export function IndicesOrderingPage() {
 //   const setWatchlistId      = useMarketStore((s) => s.setWatchlistId);
-  const activeTab = useUIStore((s) => s.activeTab);
+  // const activeTab = useUIStore((s) => s.activeTab);
   const setActiveTab      = useUIStore((s) => s.setActiveTab);
-  const setSelected = useMarketStore((s) => s.setSelected);
+  // const setSelected = useMarketStore((s) => s.setSelected);
   const token = useUIStore((s) => s.token);
   const [indicesData, setIndicesData] = useState<{indices: IndicesItem[]}>({
     indices: [],
@@ -90,7 +91,12 @@ export function IndicesOrderingPage() {
           gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
           gap: "14px",
         }}>
-          {indicesData.indices.map((i) => {          
+          {indicesData.indices.map((i) => {   
+          //   const handleView = (e: React.MouseEvent, exchange: string) => {
+          //     e.stopPropagation();
+          //     setSelected(exchange);
+          //     setActiveTab("indices-detail")
+          // }       
             return (
               <div key={i.indexName} style={{
                 background: "var(--bg-panel)", border: "1px solid var(--border)",

@@ -1,12 +1,12 @@
 import { memo, useState, useEffect } from "react";
-import { useMarketStore } from "@/store";
-import { useUIStore } from "@/store";
-import { dashboardConfig } from "@/services/dashboard/dashboard-config";
-import { getMarketStatus } from "@/services/dashboard/market-status";
+import { useMarketStore } from "../../store/market.store";
+import { useUIStore } from "../../store/ui.store";
+import { dashboardConfig } from "../../services/dashboard/dashboard-config";
+// import { getMarketStatus } from "../../services/dashboard/market-status";
 
 export const Header = memo(function Header() {
   const isConnected = useMarketStore((s) => s.isConnected);
-  const setConnected = useMarketStore((s) => s.setConnected);
+  // const setConnected = useMarketStore((s) => s.setConnected);
   const tickCount   = useMarketStore((s) => s.tickCount);
   const activeTab   = useUIStore((s) => s.activeTab);
   const setActiveTab = useUIStore((s) => s.setActiveTab);
