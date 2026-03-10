@@ -85,6 +85,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://animated-space-goggles-66x4755ww4wc55g5-9000.app.github.dev
+        with:
           scanMetadataReportFile: client/.scannerwork/report-task.txt
 
   # ── Step 3: Deploy (only on push to main/master) ──────────────
