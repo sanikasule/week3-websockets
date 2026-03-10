@@ -67,6 +67,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://animated-space-goggles-66x4755ww4wc55g5-9000.app.github.dev
         with:
+          projectBaseDir: client
           args: >
             -Dsonar.projectKey=websockets
             -Dsonar.projectName=websockets
