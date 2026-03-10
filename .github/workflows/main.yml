@@ -44,7 +44,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: coverage
-          path: coverage/
+          path: client/coverage/
 
   # ── Step 2: SonarQube Analysis ────────────────────────────────
   sonar:
