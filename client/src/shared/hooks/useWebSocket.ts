@@ -101,8 +101,96 @@
 //   return { send };
 // }
 
+// import { useEffect } from "react";
+// import { useMarketStore } from "../../store";
+// import { 
+//   wsManager, 
+//   WsLifecycleEvent, 
+//   MarketTick 
+// } from "../../services/websocket";
+
+// export function useWebSocket(clientCode: string) {
+//   // Use getState to avoid unnecessary re-renders of the hook itself
+//   const { setStock, setOrderBook, setConnected, addEvent } = useMarketStore.getState();
+
+//   useEffect(() => {
+//     if (!clientCode) return;
+
+//     // 1. Handle Lifecycle Events using the 'kind' property from types.ts
+//     const handleLifecycle = (event: WsLifecycleEvent) => {
+//       switch (event.kind) {
+//         case "CONNECTED":
+//           setConnected(true);
+//           addEvent("WebSocket Connected", "connect");
+//           break;
+//         case "DISCONNECTED":
+//           setConnected(false);
+//           addEvent(`Disconnected: ${event.reason}`, "disconnect");
+//           break;
+//         case "RECONNECTING":
+//           addEvent(`Retrying connection (Attempt ${event.attempt})...`, "disconnect");
+//           break;
+//         case "ERROR":
+//           addEvent("WebSocket Error occurred", "error");
+//           break;
+//         case "PONG_TIMEOUT":
+//           addEvent("Connection heartbeat lost", "error");
+//           break;
+//       }
+//     };
+
+//     // 2. Handle incoming Market Data
+//     const handleTicks = (tick: MarketTick) => {
+//       // Map normalized MarketTick to your store's expectations
+//       // Note: Using tick.token as the symbol and tick.ltp as the price
+//       setStock({ 
+//         symbol: tick.token,
+//         price: tick.ltp,
+//         open: tick.open,
+//         high: tick.high,
+//         low: tick.low,
+//         prevClose: tick.close, // Mapping close to prevClose as per your Stock type
+//         change: tick.change,
+//         changePercent: tick.changePercent,
+//         volume: tick.volume,
+//         // Since the WS tick doesn't provide these, we provide empty strings/defaults.
+//         // In a real app, your store's setStock should ideally merge this 
+//         // with existing static data.
+//         name: "", 
+//         sector: "", 
+//       });
+
+//       addEvent(`${tick.token} → ₹${tick.ltp.toFixed(2)}`, "price");
+//     };
+
+//     // 3. Register listeners
+//     const unsubscribeTick = wsManager.onTick(handleTicks);
+//     const unsubscribeLifecycle = wsManager.onLifecycle(handleLifecycle);
+
+//     // 4. Initialize connection
+//     wsManager.connect(clientCode);
+
+//     // Cleanup: remove listeners from the singleton
+//     return () => {
+//       unsubscribeTick();
+//       unsubscribeLifecycle();
+//       // We do NOT call wsManager.disconnect() here to allow the 
+//       // socket to persist while the user navigates the app.
+//     };
+//   }, [clientCode, setStock, setOrderBook, setConnected, addEvent]);
+
+//   // Helper for manual subscriptions (e.g., searching for a new stock)
+//   const subscribe = (tokens: string[], exchange: any = "NSE_CM") => {
+//     wsManager.subscribe([{ exchange, tokens }]);
+//   };
+
+//   return { subscribe };
+// }
+
+
+
 import { useEffect } from "react";
-import { useMarketStore } from "../../store";
+import { useMarketStore, useLiveMarketStore } from "../../store";
 import { 
   wsManager, 
   WsLifecycleEvent, 
@@ -110,14 +198,18 @@ import {
 } from "../../services/websocket";
 
 export function useWebSocket(clientCode: string) {
-  // Use getState to avoid unnecessary re-renders of the hook itself
-  const { setStock, setOrderBook, setConnected, addEvent } = useMarketStore.getState();
+  // Use getState for actions to keep the hook stable
+  const { handleTick, handleLifecycle } = useLiveMarketStore.getState();
+  const { setConnected, addEvent } = useMarketStore.getState();
 
   useEffect(() => {
     if (!clientCode) return;
 
-    // 1. Handle Lifecycle Events using the 'kind' property from types.ts
-    const handleLifecycle = (event: WsLifecycleEvent) => {
+    // 1. Pipe lifecycle events to the Live Store
+    const onLifecycle = (event: WsLifecycleEvent) => {
+      handleLifecycle(event);
+      
+      // Update UI-specific state
       switch (event.kind) {
         case "CONNECTED":
           setConnected(true);
@@ -127,62 +219,32 @@ export function useWebSocket(clientCode: string) {
           setConnected(false);
           addEvent(`Disconnected: ${event.reason}`, "disconnect");
           break;
-        case "RECONNECTING":
-          addEvent(`Retrying connection (Attempt ${event.attempt})...`, "disconnect");
-          break;
         case "ERROR":
-          addEvent("WebSocket Error occurred", "error");
-          break;
-        case "PONG_TIMEOUT":
-          addEvent("Connection heartbeat lost", "error");
+          addEvent("WebSocket Error", "error");
           break;
       }
     };
 
-    // 2. Handle incoming Market Data
-    const handleTicks = (tick: MarketTick) => {
-      // Map normalized MarketTick to your store's expectations
-      // Note: Using tick.token as the symbol and tick.ltp as the price
-      setStock({ 
-        symbol: tick.token,
-        price: tick.ltp,
-        open: tick.open,
-        high: tick.high,
-        low: tick.low,
-        prevClose: tick.close, // Mapping close to prevClose as per your Stock type
-        change: tick.change,
-        changePercent: tick.changePercent,
-        volume: tick.volume,
-        // Since the WS tick doesn't provide these, we provide empty strings/defaults.
-        // In a real app, your store's setStock should ideally merge this 
-        // with existing static data.
-        name: "", 
-        sector: "", 
-      });
-
-      addEvent(`${tick.token} → ₹${tick.ltp.toFixed(2)}`, "price");
+    // 2. Pipe ticks to the Live Store
+    const onTicks = (tick: MarketTick) => {
+      handleTick(tick);
+      addEvent(`${tick.token} → ₹${tick.ltp}`, "price");
     };
 
-    // 3. Register listeners
-    const unsubscribeTick = wsManager.onTick(handleTicks);
-    const unsubscribeLifecycle = wsManager.onLifecycle(handleLifecycle);
+    const unsubscribeTick = wsManager.onTick(onTicks);
+    const unsubscribeLifecycle = wsManager.onLifecycle(onLifecycle);
 
-    // 4. Initialize connection
+    // Initialize connection
     wsManager.connect(clientCode);
 
-    // Cleanup: remove listeners from the singleton
     return () => {
       unsubscribeTick();
       unsubscribeLifecycle();
-      // We do NOT call wsManager.disconnect() here to allow the 
-      // socket to persist while the user navigates the app.
     };
-  }, [clientCode, setStock, setOrderBook, setConnected, addEvent]);
+  }, [clientCode, handleTick, handleLifecycle, setConnected, addEvent]);
 
-  // Helper for manual subscriptions (e.g., searching for a new stock)
-  const subscribe = (tokens: string[], exchange: any = "NSE_CM") => {
-    wsManager.subscribe([{ exchange, tokens }]);
+  return {
+    subscribe: (tokens: string[], exchange: any = "NSE_CM") => 
+      wsManager.subscribe([{ exchange, tokens }])
   };
-
-  return { subscribe };
 }

@@ -23,6 +23,7 @@ export const ValidateOTP = () => {
              * 2. The OTP must be sent as a NUMBER (not "1234").
              * 3. The latest handshake is sent in the headers.
              */
+            const username = "AMITH1";
             const token = await validateOTP("AMITH1", Number(otp));
             
             // 2. EXTRACTION: Save the final Bearer Token
@@ -31,6 +32,8 @@ export const ValidateOTP = () => {
             
             // For debugging (remove in production)
             console.log("Extracted Token:", token);
+
+            sessionStorage.setItem("client_code", username);
             
             pushNotification("Authentication successful!", "success");
             
